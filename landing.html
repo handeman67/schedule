@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>White Mountain Handyman Services</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#071b3b}
+.hero{
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  background:
+    linear-gradient(rgba(3,19,45,.18),rgba(3,19,45,.35)),
+    url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2400&q=90') center/cover no-repeat;
+}
+.card{width:min(980px,100%); text-align:center; color:white}
+.brand-arc{font-size:clamp(18px,4vw,38px);font-weight:900;letter-spacing:.04em;color:#ffd200;
+ text-shadow:2px 2px 0 #0a3b88, -1px -1px 0 #0a3b88; margin-bottom:8px}
+h1{margin:0;font-size:clamp(30px,6vw,58px);line-height:1.02;color:#ffd200;
+ text-shadow:3px 3px 0 #0a356f}
+.phone{font-size:clamp(24px,4vw,40px);font-weight:900;color:#ffd200;
+ text-shadow:2px 2px 0 #0a356f;margin-top:4px}
+.handyman-image{display:block;width:min(280px,72vw);height:auto;margin:14px auto 0;
+ border-radius:8px}
+.scheduler{position:relative;z-index:1;margin-top:-70px;font-size:clamp(30px,6vw,58px);font-weight:900;letter-spacing:.02em;
+ text-shadow:2px 3px 0 rgba(0,0,0,.45)}
+.tag{font-size:clamp(15px,2.5vw,25px);font-weight:800;letter-spacing:.08em;margin:10px 0 24px}
+.buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+a.button{display:inline-flex;align-items:center;justify-content:center;min-width:190px;padding:15px 22px;
+ border-radius:10px;text-decoration:none;font-size:18px;font-weight:900;border:2px solid #ffd200;
+ box-shadow:0 5px 14px rgba(0,0,0,.28);transition:.18s transform,.18s filter}
+a.button:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.call{background:#083b7a;color:white}
+.join{background:#ffd200;color:#062d63;border-color:#062d63!important}
+.note{margin-top:14px;font-size:12px;opacity:.85}
+@media(max-width:600px){.hero{padding:14px}.scheduler{margin-top:-54px}a.button{min-width:160px}}
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="card">
+    <div class="brand-arc">WHITE MOUNTAIN</div>
+    <h1>Handyman Services</h1>
+    <div class="phone">(928) 297-8814</div>
+    <img class="handyman-image" src="02_handyman_bust_clean.png" alt="White Mountain handyman">
+    <div class="scheduler">BUSINESS SCHEDULER</div>
+    <div class="tag">PLAN &nbsp;•&nbsp; TRACK &nbsp;•&nbsp; GET IT DONE</div>
+    <div class="buttons">
+      <a class="button call" href="tel:+19282978814">📞 Call Now</a>
+      <a class="button join" href="Scheduling_App.html#newForm">Join Schedule</a>
+    </div>
+    <div class="note">Repairs &nbsp;•&nbsp; Improvements &nbsp;•&nbsp; Maintenance &nbsp;•&nbsp; Quality Work</div>
+  </div>
+</section>
+<section id="schedule" style="padding:70px 20px;text-align:center;background:#fff;color:#082f66">
+  <h2>Join the Schedule</h2>
+  <p>Your customer scheduling form can be connected here.</p>
+</section>
+</body>
+</html>

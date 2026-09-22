@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Stephen Campbell Building — New Customer Form</title>
+<style>
+  :root{--navy:#073b6f;--deep:#05294e;--blue:#0b66aa;--gold:#f3c51d;--green:#2f9e44;--ink:#13263a;--muted:#5d6d7c;--line:#b9ccdc;--paper:#fff;--bg:#e8f0f6}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Source Sans 3",Arial,sans-serif;font-size:16px}
+  header{background:var(--navy);color:#fff;padding:22px 16px;border-bottom:4px solid var(--gold)}
+  header h1{margin:0 0 4px;font-size:clamp(24px,5vw,32px)}
+  header p{margin:0;color:#dbe7f0}
+  main{max-width:680px;margin:0 auto;padding:18px 16px 60px}
+  .panel{background:var(--paper);border:1px solid var(--line);box-shadow:0 4px 16px rgba(9,45,80,.10);padding:16px;margin-bottom:16px}
+  .panel h2{margin:0 0 12px;color:var(--navy);font-size:20px;border-bottom:2px solid var(--gold);padding-bottom:8px}
+  label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:700;margin-bottom:12px}
+  input,textarea{width:100%;border:1px solid var(--line);background:#f8fafc;color:var(--ink);border-radius:3px;padding:10px 11px;font:inherit;min-height:44px}
+  textarea{resize:vertical;line-height:1.45}
+  .note{color:var(--muted);font-size:13px;margin:0 0 14px}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  button{min-height:46px;border-radius:4px;border:1px solid transparent;padding:10px 16px;font-weight:800;cursor:pointer;font-size:15px}
+  .primary{background:var(--green);color:#fff;border-color:#247b35}
+  .status{font-weight:700;color:var(--blue)}
+  .done{display:none;background:#eaf7ec;border:1px solid #b6e2bd;color:#1f6a2c;padding:14px;margin-top:14px;border-radius:3px}
+  .done.show{display:block}
+  .done a{color:var(--navy)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Stephen Campbell Building</h1>
+  <p>New customer &amp; job information form</p>
+</header>
+<main>
+  <p class="note">Please fill out the fields below, then click <strong>Download completed form</strong> and email the downloaded file back to us. We'll use it to add you to our schedule.</p>
+  <form id="intakeForm">
+    <section class="panel">
+      <h2>Your information</h2>
+      <label>Full name<input name="name" required autocomplete="name"></label>
+      <label>Phone<input name="phone" type="tel" autocomplete="tel"></label>
+      <label>Email<input name="email" type="email" autocomplete="email"></label>
+      <label>Service address<input name="address" required autocomplete="street-address"></label>
+    </section>
+    <section class="panel">
+      <h2>Job / project details</h2>
+      <label>Job or project title<input name="title" required placeholder="e.g. Bathroom remodel"></label>
+      <label>Description of the work<textarea name="description" rows="5" placeholder="Please describe what you'd like done"></textarea></label>
+      <label>Materials / special instructions<textarea name="materials" rows="3" placeholder="Preferred materials, access instructions, pets, etc."></textarea></label>
+      <label>Preferred date (if any)<input name="preferredDate" type="date"></label>
+    </section>
+    <div class="actions">
+      <button class="primary" type="submit">Download completed form</button>
+    </div>
+    <div class="done" id="done">
+      <strong>Form downloaded.</strong> Please attach the downloaded file to an email and send it back to us so we can add you to the schedule.
+    </div>
+  </form>
+</main>
+<script>
+(() => {
+  "use strict";
+  document.getElementById('intakeForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    const data = {
+      form: 'customer-intake',
+      version: 1,
+      submittedAt: new Date().toISOString(),
+      customer: {
+        name: String(f.get('name') || '').trim(),
+        phone: String(f.get('phone') || '').trim(),
+        email: String(f.get('email') || '').trim(),
+        address: String(f.get('address') || '').trim()
+      },
+      job: {
+        title: String(f.get('title') || '').trim(),
+        description: String(f.get('description') || '').trim(),
+        materials: String(f.get('materials') || '').trim(),
+        preferredDate: String(f.get('preferredDate') || '')
+      }
+    };
+    const safeName = (data.customer.name || 'customer').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = `intake-${safeName}.json`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    document.getElementById('done').classList.add('show');
+  });
+})();
+</script>
+</body>
+</html>
