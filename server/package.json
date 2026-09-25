@@ -1,0 +1,13 @@
+{
+  "name": "white-mountain-scheduler-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Zero-dependency local server for the White Mountain Handyman scheduler. Serves the app, keeps schedule data in server memory, and receives customer intake form submissions directly.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

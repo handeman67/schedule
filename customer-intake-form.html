@@ -32,7 +32,7 @@
   <p>New customer &amp; job information form</p>
 </header>
 <main>
-  <p class="note">Please fill out the fields below, then click <strong>Download completed form</strong> and email the downloaded file back to us. We'll use it to add you to our schedule.</p>
+  <p class="note">Please fill out the fields below and click <strong>Submit</strong>. If we can't reach the office system, this page will download a file instead — just email that file back to us.</p>
   <form id="intakeForm">
     <section class="panel">
       <h2>Your information</h2>
@@ -49,18 +49,31 @@
       <label>Preferred date (if any)<input name="preferredDate" type="date"></label>
     </section>
     <div class="actions">
-      <button class="primary" type="submit">Download completed form</button>
+      <button class="primary" type="submit">Submit</button>
+      <span class="status" id="submitStatus"></span>
     </div>
     <div class="done" id="done">
-      <strong>Form downloaded.</strong> Please attach the downloaded file to an email and send it back to us so we can add you to the schedule.
+      <strong id="doneMessage">Submitted.</strong> <span id="doneDetail"></span>
     </div>
   </form>
 </main>
 <script>
 (() => {
   "use strict";
-  document.getElementById('intakeForm').addEventListener('submit', e => {
+
+  function downloadFallback(data) {
+    const safeName = (data.customer.name || 'customer').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = `intake-${safeName}.json`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+
+  document.getElementById('intakeForm').addEventListener('submit', async e => {
     e.preventDefault();
+    const submitStatus = document.getElementById('submitStatus');
     const f = new FormData(e.currentTarget);
     const data = {
       form: 'customer-intake',
@@ -79,13 +92,24 @@
         preferredDate: String(f.get('preferredDate') || '')
       }
     };
-    const safeName = (data.customer.name || 'customer').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-    a.download = `intake-${safeName}.json`;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+
+    submitStatus.textContent = 'Sending…';
+    try {
+      const res = await fetch('/api/intake', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customer: data.customer, job: data.job })
+      });
+      if (!res.ok) throw new Error('Server rejected submission');
+      document.getElementById('doneMessage').textContent = 'Submitted.';
+      document.getElementById('doneDetail').textContent = 'Thanks — your information was sent directly to our scheduler.';
+      submitStatus.textContent = '';
+    } catch {
+      downloadFallback(data);
+      document.getElementById('doneMessage').textContent = 'Form downloaded.';
+      document.getElementById('doneDetail').textContent = "We couldn't reach the office system, so please attach the downloaded file to an email and send it back to us.";
+      submitStatus.textContent = '';
+    }
     document.getElementById('done').classList.add('show');
   });
 })();
